@@ -199,9 +199,9 @@ $ mongo --quiet "mongodb://127.0.0.1:27017"
 $ mongo --quiet "mongodb://127.0.0.1:27017"
 > use admin
 switched to db admin
-> db.createUser({user:"root",pwd:"iam59!z$",roles:["root"]})
+> db.createUser({user:"root",pwd:"123456",roles:["root"]})
 Successfully added user: { "user" : "root", "roles" : [ "root" ] }
-> db.auth("root", "iam59!z$")
+> db.auth("root", "123456")
 1
 ```
 
@@ -217,19 +217,19 @@ Successfully added user: { "user" : "root", "roles" : [ "root" ] }
 为了安全，我们需要使用一个普通用户而非管理员用户来连接MongoDB，所以我们需要为IAM创建一个叫iam的普通用户：
 
 ```go
-$ mongo --quiet mongodb://root:'iam59!z$'@127.0.0.1:27017/tyk_analytics?authSource=admin # 用管理员账户连接MongoDB
+$ mongo --quiet "mongodb://root:'123456'@127.0.0.1:27017/tyk_analytics?authSource=admin" # 用管理员账户连接MongoDB
 > use iam_analytics
 switched to db iam_analytics
-> db.createUser({user:"iam",pwd:"iam59!z$",roles:["dbOwner"]})
+> db.createUser({user:"iam",pwd:"123456",roles:["dbOwner"]})
 Successfully added user: { "user" : "iam", "roles" : [ "dbOwner" ] }
-> db.auth("iam", "iam59!z$")
+> db.auth("iam", "123456")
 1
 ```
 
 创建完iam普通用户后，我们就可以通过iam用户登录MongoDB：
 
 ```bash
-$ mongo --quiet mongodb://iam:'iam59!z$'@127.0.0.1:27017/iam_analytics?authSource=iam_analytics
+$ mongo --quiet mongodb://iam:'123456'@127.0.0.1:27017/iam_analytics?authSource=iam_analytics
 ```
 
 官方安装文档请参考：[Install MongoDB Community Edition on Red Hat or CentOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/)
